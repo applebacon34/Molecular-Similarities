@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+{% load static %}
+
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{% static 'CSS/styles.css'%}">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+    
+    <title>Molecular Similarities</title>
+</head>
+<body>
+    <div class = "container">
+        <div class="top-text">
+            <h1>Testing molecular similarities</h1>
+            <h4>Created by Maxym Besh</h4>
+            <p class="app-description">This website allows the user to compare their compound of interest with the metabolites of Escherichia coli K12 MG1655 (E.Coli).
+                there are two ways in which you can enter the query compound: </p>
+                <ol>
+                    <li>Draw the molecule in the editor and export it using the "Export Molecule" button </li>
+                    <li>Enter the molecuar structure in the SMILES format into the "Smiles input" box </li>
+                </ol>
+            <p>For example if you want to compare glucose to the metabolites of E.Coli you would need to enter this text into the box below:
+            <p>C(C1C(C(C(C(O1)O)O)O)O)O</p>
+            <p>The SMILES format can be Isometric SMILES or Canonical SMILES. A tip is to enter the sequence without any quotes around it. 
+                Once you are happy with the molecule you want to compare click the "Start Matching" button.
+                The system will campare the entire E.Coli metabolome to your query and give you 
+                Match: Query pairs which have over <span class="em">80%</span> similarity between them.
+            </p>
+            <p> It can take up to <span>1 minute</span> depending on your the size of your query and your connection to produce results</p>
+            <p>In order to carry out another comparison click <span>back button</span> on your device</p>
+        </div>
+        <h3>The Editor</h3>
+        <div class ="ketcher">
+            
+            <iframe id = "ifKetcher"src="{% static 'ketcher/index.html' %}"  frameborder="0"></iframe>
+        </div>    
+        <Button type="button" onclick = "exportSMILES()" class = "btn btn-ketcher">Export Molecule</Button>
+        
+        
+        <form method ='POST' class = "input-form" name="form_for_input">
+        {{form}}
+        {% csrf_token %}
+        <button type = "submit" class = "btn btn-submit">Start Matching</button>   
+        </form>
+        <!-- <div class = "match">
+            <div class = "div-images">
+                <div class = "div-match-image">
+                    <img src="{% static 'images/'%}1.png" alt="Image of the match" class = "query-image image">
+                    <p class = "p-match">Match Image</p>
+                </div>
+
+                <div class = "div-user-image">
+                    <img src="{% static 'input_image/user_input.png' %}" alt="Image of USer input" class = "user-image image">
+                    <p class = "p-query">Query Image</p>   
+                    
+                </div>    
+            </div>    
+        
+            <p class = "compound-name">Match name is: {{item.name}}</p> 
+            <p class="descr">{{item.description}}</p>
+            <p class = "p-smiles">The smile for this match is: </p>
+            <p class = "p-actual-smiles">{{item.smiles}}</p>
+        </div> -->
+        {% if matches|length > 0 %}
+        <h2>The seearch has generated {{ matches | length}} matches for your query</h2>
+        {%endif%}
+            {% if request.method == "POST" and matches|length == 0 %}
+                <h1>There is no match</h1>
+            {%else%}
+                {% for  item in matches %}
+                
+                
+                    <div class = "match">
+                        <div class = "div-images">
+                            <div class = "div-match-image">
+                                <img src="{% static 'images/'%}{{item.id}}.png" alt="Image of the match" class = "query-image image">
+                                <p class = "p-match">Match Image</p>
+                            </div>
+
+                            <div class = "div-user-image">
+                                <img src="{% static 'input_image/user_input.png' %}" alt="Image of USer input" class = "user-image image">
+                                <p class = "p-query">Query Image</p>   
+                                
+                            </div>    
+                        </div>    
+                    
+                        <p class = "compound-name">Match name is: {{item.name}}</p> 
+                        <p class="descr">{{item.description}}</p>
+                        <p class = "p-smiles">The smile for this match is: </p>
+                        <p class = "p-actual-smiles">{{item.smiles}}</p>
+                    </div>
+                {%endfor%}
+            {%endif%}
+            
+            <footer class="footer">This website was created with E.Coli data from 
+                <a href="https://ecmdb.ca/">E.coli Metabolome Database</a> and the software to carry out the comparison was written with
+                <a href=" https://www.rdkit.org/docs/GettingStartedInPython.html">RDKit module</a> for Python. The editor was taken from <a href="https://lifescience.opensource.epam.com/ketcher/index.html">EPAM Ketcher</a> open-source product.  
+            </footer>
+    </div>
+    <script src="{% static '/JS/index.js'%}"></script>
+    
+</body>
+</html>
