@@ -26,7 +26,7 @@ SECRET_KEY = 'django-insecure-#lb8f(d)oc$4eqgbz+&@jj9^7vflz-fiex6l=3#h-21ypw@+yz
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['molecularsimilarity.pythonanywhere.com']
 
 
 # Application definition
